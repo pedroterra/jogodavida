@@ -20,7 +20,7 @@
 
   []	REQ07: O sistema deverá permitir ao usuário simular passo-a-passo as gerações
 
-  []	REQ08: O sistema deverá permitir ao usuário selecionar alguns padrões de imagens do
+  [X]	REQ08: O sistema deverá permitir ao usuário selecionar alguns padrões de imagens do
 	seres vivos.
 
   []	REQ09: O sistema deverá permitir ao usuário salvar uma geração em arquivo
@@ -37,9 +37,10 @@ void imprime_mapa(int **matriz, int tamanho);
 int conta_vizinhos(int **matriz, int linha, int coluna, int tamanho);
 void copia_matriz(int **m_copia, int **m_original, int tamanho);
 void limpa_matriz(int **matriz, int tamanho);
-// int interface_comandos();
+int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_gen);
 void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen);
 //void escolha_tam_mat(int *n);
+void selecionar_seres(int **mapa, int tamanho);
 
 int main(){
 	
@@ -89,55 +90,13 @@ int main(){
 	imprime_mapa(mapa, n);
 
 	// coloca ser vivo
-	int metade = n/2;
-	
-	
-	printf("Escolha o ser\n\n ");
-	printf("ser 1:\n");
-	printf("o o o o o o o o o o \n\n");
-	printf("ser 2:\n");
-	printf("  o \n    o \no o o \n\n");
-	printf("ser 3:\n");
-	printf("  o \no o o \no   o \n  o \n\n");
-	
-	
-	
-	scanf("%d", &ser);
-	
-	if(ser == 1){
-		mapa[metade][metade - 5] = 1;
-		mapa[metade][metade - 4] = 1;
-		mapa[metade][metade - 3] = 1;
-		mapa[metade][metade - 2] = 1;
-		mapa[metade][metade - 1] = 1;
-		mapa[metade][metade] = 1;
-		mapa[metade][metade + 1] = 1;
-		mapa[metade][metade + 2] = 1;
-		mapa[metade][metade + 3] = 1;
-		mapa[metade][metade + 4] = 1;
-	}
-	if (ser == 2){
-		mapa[metade+1][metade-1] = 1;
-		mapa[metade+1][metade] = 1;
-		mapa[metade+1][metade+1] = 1;
-		mapa[metade][metade+1] = 1;
-		mapa[metade-1][metade] = 1;
-	}
-	if (ser == 3){
-		mapa[metade+1][metade] = 1;
-		mapa[metade][metade-1] = 1;
-		mapa[metade][metade+1] = 1;
-		mapa[metade-1][metade-1] = 1;
-		mapa[metade-1][metade] = 1;
-		mapa[metade-1][metade+1] = 1;
-		mapa[metade-2][metade] = 1;
-	}
-
-	
+	selecionar_seres(mapa, n);
 
 	// imprime a matriz
 	printf("\nMAPA\n");
 	imprime_mapa(mapa, n);
+	
+	interface_comandos(mapa, n, mapa_next_gen, num_gen);
     
     // while (num_seres > n*n)
 //     {
@@ -153,13 +112,15 @@ int main(){
 //         }
 //     }
 	
-	int ini_sim;
-	printf("\n> Iniciar Simulação? (sim = 1 e  nao = 0)");
-	scanf("%d", &ini_sim);
-	if (ini_sim == 1){
-		rodar_simulacao(mapa, mapa_next_gen, n,num_gen);
-		
-	}
+	// int ini_sim;
+// 	printf("\n> Iniciar Simulação? (sim = 1 e  nao = 0)");
+// 	scanf("%d", &ini_sim);
+// 	if (ini_sim == 1){
+// 		rodar_simulacao(mapa, mapa_next_gen, n,num_gen);
+//
+// 	}
+	printf("\nTESTE TESTE TESTE");
+	interface_comandos(mapa, n, mapa_next_gen, num_gen);
 
 	return 0;
 }
@@ -298,23 +259,76 @@ void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen){
 // 	return
 // }
 //
-// int interface_comandos(int **matriz, int tamanho){
-// 	int comando;
-// 	printf("O que deseja fazer:");
-// 	printf("1 - Limpar mapa");
-// 	printf("2 - Escolher numero de gerações");
-// 	printf("3 - Iniciar Simulação");
-// 	printf("4 - modificar tamanho do mapa");
-//
-// 	scanf("%d", &comando);
-//
-// 	if (comando == 1){
-// 		limpa_matriz(matriz, tamanho);
-// 	} else if (comando == 2){
-//
-// 	}
-// }
+int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_gen){
+	int comando;
+	printf("O que deseja fazer:\n");
+	printf("1 - Definir tamanho mapa\n");
+	printf("2 - Selecionar Seres vivos\n");
+	printf("3 - limpar mapa\n");
+	printf("4 - Iniciar Simulação\n");
+	printf("4 - determinar numero de gerações a ser rodadas\n");
+	printf("4 - modificar tamanho do mapa\n");
 
+	scanf("%d", &comando);
+
+	if (comando == 1){
+		limpa_matriz(matriz, tamanho);
+	} else if (comando == 2){
+		selecionar_seres(matriz, tamanho);
+	} else if (comando == 3){
+		limpa_matriz(matriz, tamanho);
+	} else if (comando ==4){
+		rodar_simulacao(matriz, mapa_next_gen, tamanho, num_gen);
+	}
+	
+	return comando;
+}
+
+
+void selecionar_seres(int **matriz, int tamanho){
+	int metade = tamanho/2;
+	int ser;
+	
+	printf("Escolha o ser\n\n ");
+	printf("ser 1:\n");
+	printf("o o o o o o o o o o \n\n");
+	printf("ser 2:\n");
+	printf("  o \n    o \no o o \n\n");
+	printf("ser 3:\n");
+	printf("  o \no o o \no   o \n  o \n\n");
+	
+	scanf("%d", &ser);
+	
+	if(ser == 1){
+		matriz[metade][metade - 5] = 1;
+		matriz[metade][metade - 4] = 1;
+		matriz[metade][metade - 3] = 1;
+		matriz[metade][metade - 2] = 1;
+		matriz[metade][metade - 1] = 1;
+		matriz[metade][metade] = 1;
+		matriz[metade][metade + 1] = 1;
+		matriz[metade][metade + 2] = 1;
+		matriz[metade][metade + 3] = 1;
+		matriz[metade][metade + 4] = 1;
+	}
+	if (ser == 2){
+		matriz[metade+1][metade-1] = 1;
+		matriz[metade+1][metade] = 1;
+		matriz[metade+1][metade+1] = 1;
+		matriz[metade][metade+1] = 1;
+		matriz[metade-1][metade] = 1;
+	}
+	if (ser == 3){
+		matriz[metade+1][metade] = 1;
+		matriz[metade][metade-1] = 1;
+		matriz[metade][metade+1] = 1;
+		matriz[metade-1][metade-1] = 1;
+		matriz[metade-1][metade] = 1;
+		matriz[metade-1][metade+1] = 1;
+		matriz[metade-2][metade] = 1;
+	}
+	
+}
 
 
 
