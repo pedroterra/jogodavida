@@ -52,7 +52,7 @@ int main(){
 	
 	// int tam[1];
 // 	tam = 0;
-	
+	num_gen[0]=1;
 	tipo_sim[0]=1;
 	vel_sim[0]=0;
 	
@@ -60,11 +60,11 @@ int main(){
 	//escolher_tamanho(tam, mapa,mapa_next_gen);
 	
 	while (tam < 20 || tam > 100){
-		printf("\n> Escolha o tamanho da matriz a ser criada: \n");
+		printf("\n-- Escolha o tamanho da matriz a ser criada: \n");
 		scanf("%d", &tam);
 
 		if (tam < 10 || tam >100 ){
-	    	    printf("\n> Tamanho inválido, repita o processo");
+	    	    printf("\nTamanho inválido, repita o processo.");
 		}
 	}
 	tam = tam +2;
@@ -86,7 +86,7 @@ int main(){
 	copia_matriz(mapa_next_gen, mapa, tam);
 	
 	//seleciona  o numero de gerações a ser rodado
-	seleciona_num_gen(num_gen);
+	//seleciona_num_gen(num_gen);
 
 	//imprime mapa inicial
 	printf("\nMAPA\n");
@@ -96,11 +96,11 @@ int main(){
 // 	desenha_ser(mapa, tam);
 
 	// coloca ser vivo
-	selecionar_seres(mapa, tam);
+	//selecionar_seres(mapa, tam);
 
 	// imprime a matriz
-	printf("\nMAPA\n");
-	imprime_mapa(mapa, tam);
+	//printf("\nMAPA\n");
+	//imprime_mapa(mapa, tam);
 	
 	//roda interface até que usuário marque para sair do programa
 	while(quit != 9){
@@ -177,10 +177,14 @@ void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[]
 	//roda a simulacao 
 	int vizinhos, i, j, k;
 	printf("Iniciando Simulacao\n");
+	
+	printf("\nGeracao 0\n");
+	imprime_mapa(mapa, tamanho);
+	
         for (k=0;k<num_gen[0];k++){
 		
 		if (tipo_sim[0] == 2){
-			printf("Press Enter to Continue");
+			printf("-- Pressione Enter para continuar");
 			while( getchar() != '\n' );
 		} else {
 			sleep(vel_sim[0]);
@@ -202,15 +206,15 @@ void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[]
 		}
 		copia_matriz(mapa,  mapa_next_gen, tamanho);
 		
-		printf("\ngeracao %d \n", k+1);
+		printf("\nGeracao %d \n", k+1);
 		imprime_mapa(mapa, tamanho);
 	}
 }
 
 int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_gen[], int tipo_sim[], int vel_sim[]){
-	int comando;
-	printf("\n> O que deseja fazer:\n");
-	printf("0 - Refinir tamanho mapa\n");
+	int comando, subcomando;
+	printf("\n-- Selecione um COMANDO:\n");
+	//printf("0 - Refinir tamanho mapa\n");
 	printf("1 - Selecionar seres vivos\n");
 	printf("2 - limpar Mapa\n");
 	printf("3 - Determinar numero de geracoes a ser rodadas\n");
@@ -220,7 +224,7 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 	printf("7 - Importar arquivo geração\n");
 	printf("8 - vizualizar configuracoes atuais\n");
 	printf("9 - Sair do jogo\n");
-	
+	printf(">> ");
 	scanf("%d", &comando);
 
 	if (comando == 0){
@@ -228,9 +232,17 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 		printf("Funcao ainda não implementada\n");
 	
 	}else if (comando == 1){
-		desenha_ser(matriz, tamanho);
-		selecionar_seres(matriz, tamanho);
-		imprime_mapa(matriz, tamanho);
+		printf("\n\t-- De qual maneira gostaria de inserir os seres?\n");
+		printf("\t1 - Desenhando um ser customizado\n");
+		printf("\t2 - Escolhendo de padroes prontos\n\t>> ");
+		scanf("%d", &subcomando);
+		
+		if (subcomando == 1) desenha_ser(matriz, tamanho);
+		else if (subcomando == 2) {
+			selecionar_seres(matriz, tamanho);
+			imprime_mapa(matriz, tamanho);
+		} else printf("Comando inválido");
+		
 	
 	} else if (comando == 2){
 		printf("Limpando a Matriz\n");
@@ -239,14 +251,14 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 	
 	} else if (comando == 3){
 		seleciona_num_gen(num_gen);
-		printf("Serão rodadas %d geracoes \n", num_gen[0]);
+		printf("\tSerão rodadas %d geracoes \n", num_gen[0]);
 	
 	} else if (comando == 4){
-		printf("    1 - Simulacao automatica\n");
-		printf("    2 - Simulacao manual\n");
-		scanf("	    %d", &tipo_sim[0]);
+		printf("\t1 - Simulacao automatica\n");
+		printf("\t2 - Simulacao manual\n\t>>");
+		scanf("%d", &tipo_sim[0]);
 		if (tipo_sim[0] == 1){
-			printf("> Escolha a velocidade da simulação em segundos:\n");
+			printf("\t\t-- Escolha a velocidade da simulação em segundos:\n\t\t");
 			scanf("%d", &vel_sim[0]);
 		}	
 	
@@ -288,23 +300,23 @@ void selecionar_seres(int **matriz, int tamanho){
 	int metade = tamanho/2;
 	int ser;
 	
-	printf("> Escolha o ser que quer adicionar ao mapa:\n\n ");
-	printf("Ser 1:\n\n");
-	printf("o o o o o o o o o o \n\n");
-	printf("------------------------\n\n");
-	printf("Ser 2:\n\n");
-	printf("  o \n");
-	printf("    o \n");
-	printf("o o o \n\n");
-	printf("------------------------\n\n");
-	printf("Ser 3:\n\n");
-	printf("  o \n");
-	printf("o o o \n");
-	printf("o   o \n");
-	printf("  o   \n\n");
-	printf("------------------------\n\n");
+	printf("\t\t> Escolha o ser que quer adicionar ao mapa:\n\n ");
+	printf("\t\tSer 1:\n\n");
+	printf("\t\to o o o o o o o o o \n\n");
+	printf("\t\t------------------------\n\n");
+	printf("\t\tSer 2:\n\n");
+	printf("\t\t  o \n");
+	printf("\t\t    o \n");
+	printf("\t\to o o \n\n");
+	printf("\t\t------------------------\n\n");
+	printf("\t\tSer 3:\n\n");
+	printf("\t\t  o \n");
+	printf("\t\to o o \n");
+	printf("\t\to   o \n");
+	printf("\t\t  o   \n\n");
+	printf("\t\t------------------------\n\n>> ");
 	
-	printf(" Ou digite 0 para não colocar nenhum ser no momento\n");
+	//printf(" Ou digite 0 para não colocar nenhum ser no momento\n");
 	
 	scanf("%d", &ser);
 	
@@ -340,7 +352,7 @@ void selecionar_seres(int **matriz, int tamanho){
 }
 
 void seleciona_num_gen(int num_gen[]){
-	printf("> Escolha o número de gerações a serem rodadas:\n");
+	printf("\n\t-- Escolha o número de gerações a serem rodadas:\n\t>> ");
 	scanf("%d", &num_gen[0]);
 }
 
@@ -351,26 +363,28 @@ void pressione_enter(){
 
 void desenha_ser(int **matriz, int tamanho){
 	int linha = -1, coluna= -1, sair = 1;
+	printf("\n\t\t-- Escolha as coordenadas X e Y de cada ponto.\n");
+	printf("\t\t(Seu Mapa tem tamanho %d por %d. Logo digite valores de 0 a %d)\n", tamanho-2, tamanho-2, tamanho-3);
+	
 	
 	do{
-		while (linha < 0 || linha > tamanho-2 || coluna <0 || coluna > tamanho-2){
-			printf("digite o numero de uma linha (de 0 a %d):\n", tamanho-2);
-			scanf ("%d", &linha);
-			printf("digite o numero da coluna (de 0 a %d):\n", tamanho-2);
+		while (linha < 0 || linha > tamanho-3 || coluna <0 || coluna > tamanho-3){
+			printf("\t\tEscolha o valor de X:\n\t\t>> ");
 			scanf ("%d", &coluna);
+			printf("\t\tEscolha o valor de Y:\n\t\t>> ");
+			scanf ("%d", &linha);
 			
-			if (linha < 0 || linha > tamanho-2 || coluna <0 || coluna > tamanho-2){
-				printf("ponto inválido, tende novamente");
+			if (linha < 0 || linha > tamanho-3 || coluna <0 || coluna > tamanho-3){
+				printf("\n\t\tPonto inválido! Tende novamente.\n\n");
 			}
 		}
 		
-	
 		matriz[linha+1][coluna+1] = 1;
 	
 		imprime_mapa(matriz, tamanho);
 		
-		printf("Deseja adicinar outro ponto?\n");
-		printf("Digite 1 para sim e 0 para não");
+		printf("\n-- Deseja adicinar outro ponto?\n");
+		printf(" 1 - Sim \n 2 - Não\n>>");
 		scanf("%d", &sair);
 		
 		linha = -1;
