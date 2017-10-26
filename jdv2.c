@@ -40,7 +40,6 @@ int main(){
 	//informações importantes: tamanho mapa, numero de gerações, limpar
 	int i, quit;
 
-	//int tam = 0;	
 	int **mapa;
 	int **mapa_next_gen;
 	int tam_mat;
@@ -50,14 +49,11 @@ int main(){
 	
 	int tam = 0;
 	
-	// int tam[1];
-// 	tam = 0;
 	num_gen[0]=1;
 	tipo_sim[0]=1;
 	vel_sim[0]=0;
 	
 	// Escolha do tamanho da matriz
-	//escolher_tamanho(tam, mapa,mapa_next_gen);
 	
 	while (tam < 20 || tam > 100){
 		printf("\n-- Escolha o tamanho da matriz a ser criada: \n");
@@ -84,23 +80,11 @@ int main(){
 	// coloca zeros no mapa e no mapa next gen
 	limpa_matriz(mapa, tam);
 	copia_matriz(mapa_next_gen, mapa, tam);
-	
-	//seleciona  o numero de gerações a ser rodado
-	//seleciona_num_gen(num_gen);
 
 	//imprime mapa inicial
 	printf("\nMAPA\n");
 	imprime_mapa(mapa, tam);
 	
-	// printf("desenhe os seres: \n");
-// 	desenha_ser(mapa, tam);
-
-	// coloca ser vivo
-	//selecionar_seres(mapa, tam);
-
-	// imprime a matriz
-	//printf("\nMAPA\n");
-	//imprime_mapa(mapa, tam);
 	
 	//roda interface até que usuário marque para sair do programa
 	while(quit != 9){
@@ -395,35 +379,7 @@ void desenha_ser(int **matriz, int tamanho){
 }
 
 
-// void escolher_tamanho(int tam, int **mapa, int **mapa_next_gen){
-// 	// Escolha do tamanho da matriz
-// 	//tam= 0;
-// 	int i;
-//
-// 	while (tam < 20 || tam > 100);{
-// 		printf("\n> Escolha o tamanho da matriz a ser criada: \n");
-// 		scanf("%d", &tam);
-// 		//printf("%d", tam);
-//
-// 		if (tam < 10 || tam >100 ){
-// 	    	    printf("\n> Tamanho inválido, repita o processo");
-// 		}
-// 	}
-// 	tam = tam +2;
-//
-// 	//cria mapa do tamanho correto
-// 	mapa  = (int **)malloc( tam * sizeof(int *));
-// 	for (i=0; i< tam ;i++){
-// 		mapa [i] = (int *)malloc( tam * sizeof(int));
-// 	}
-//
-// 	//cria mapa da próxima geração do tamanho correto
-// 	mapa_next_gen = (int **)malloc( tam * sizeof(int *));
-// 	for (i=0; i< tam ;i++){
-// 		mapa_next_gen [i] = (int *)malloc( tam * sizeof(int));
-// 	}
-//
-// }
+
 
 
 
