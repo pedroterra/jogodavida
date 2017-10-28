@@ -386,7 +386,7 @@ void salvar_geracao(int **matriz, int tamanho){
 	
 	
 	
-	char base_path[] = "/Users/pedrobirmann/version-control/jogo_da_vida/jogodavida/", extensao[] = ".txt";
+	char base_path[] = "/Users/pedrobirmann/Desktop/", extensao[] = ".txt";
 
 	//concatenates str1 and str2 and resultant string is stored in str1.
 	//strcat(str1,str2);
