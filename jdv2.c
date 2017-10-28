@@ -21,6 +21,8 @@
 #include<stdlib.h>
 #include<stdio.h>
 #include<unistd.h>
+#include<string.h>
+#include <time.h>
 
 //assinatura das funções
 void imprime_mapa(int **matriz, int tamanho);
@@ -34,6 +36,7 @@ void seleciona_num_gen(int *num_gen);
 void pressione_enter();
 void escolher_tamanho(int tam, int **mapa, int **mapa_next_gen);
 void desenha_ser(int **matriz, int tamanho);
+void salvar_geracao(int **matriz, int tamanho);
 
 int main(){
 	
@@ -250,11 +253,12 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 		rodar_simulacao(matriz, mapa_next_gen, tamanho, num_gen, tipo_sim, vel_sim);
 	
 	} else if (comando == 6){
-		//printf("6 - Salvar Ultima Geração\n");
-		printf("Funcao Ainda Não Implementada\n");
+		salvar_geracao(matriz, tamanho);
+		
 	} else if (comando == 7){
 		//printf("7 - Importar Arquivo Geração\n");
 		printf("Funcao ainda não implementada\n");
+		
 	} else if (comando == 8){
 		printf("\nConfiguracao Atual\n");
 		printf("-Mapa atual:\n");
@@ -377,6 +381,68 @@ void desenha_ser(int **matriz, int tamanho){
 	} while (sair == 1);
 	
 }
+
+void salvar_geracao(int **matriz, int tamanho){
+	
+	
+	
+	char base_path[] = "/Users/pedrobirmann/version-control/jogo_da_vida/jogodavida/", extensao[] = ".txt";
+
+	//concatenates str1 and str2 and resultant string is stored in str1.
+	//strcat(str1,str2);
+	// puts(str1);
+	// puts(str2);	
+	
+	int i,j;
+	char filename[50];
+	
+	char finalpath[100] = "";
+		
+	printf("\tEscolha o nome do seu arquivo: \n\t>> ");
+	scanf("%s",filename);
+	
+	strcat(finalpath,base_path);
+	strcat(finalpath,filename);
+	strcat(finalpath,extensao);
+	
+        FILE *fp;
+
+        if((fp=fopen(finalpath, "w"))==NULL) {
+		printf("\t Erro, não foi possível abrir o seu arquivo\n");
+		exit(1);
+        } 
+	// else {
+	// 	printf("file opened");}
+	
+	for (i = 0; i < tamanho; ++i){
+	        for (j = 0; j < tamanho; ++j){
+			if(i == 0 || i == tamanho-1){
+				fprintf(fp,". ");
+			} else if( j == 0 ){
+				fprintf(fp,". ");
+			} else if (j == tamanho-1){
+				fprintf(fp,".");
+			} else if (matriz [i][j] == 1){
+				fprintf(fp,"o ");
+			} else{
+				fprintf(fp,"  ");
+			}
+		}
+		fprintf(fp,"\n");
+	}
+	
+	fclose(fp);
+	
+	printf("\n\tArquivo Salvo com o nome %s.txt  \n", filename);
+  
+	
+}
+	
+	
+  
+        
+
+
 
 
 
