@@ -415,7 +415,6 @@ void salvar_geracao(int **matriz, int tamanho){
 void importa_geracao(int **matriz, int tamanho){
 	int i,j;
 	char base_path[] = "/Users/pedrobirmann/Desktop/";
-	//char extensao[] = ".txt";
 	char filename[50];
 	char finalpath[100] = "";
 	
@@ -428,7 +427,6 @@ void importa_geracao(int **matriz, int tamanho){
 	
 	strcat(finalpath,base_path);
 	strcat(finalpath,filename);
-	//strcat(finalpath,extensao);
 	
     FILE *fp;
 
@@ -437,10 +435,8 @@ void importa_geracao(int **matriz, int tamanho){
 		exit(1);
         } 
 	
-			
   	i = 0;
   	while (!feof(fp)) {
-		// Lê uma linha (inclusive com o '\n')
       	aux = fscanf(fp, "%d", &dado);
 		
 		if (flag_lin ==0){
@@ -451,10 +447,14 @@ void importa_geracao(int **matriz, int tamanho){
 			flag_col = 1;
 		}
 		
+		
 		if (flag_lin == 1 && flag_col == 1){
 			flag_lin = 0;
 			flag_col = 0;
-			matriz[lin][col] = 1;
+			if (lin < tamanho - 1 || col < tamanho - 1){
+				matriz[lin][col] = 1;
+			}
+			
 		}
 		
   	}
