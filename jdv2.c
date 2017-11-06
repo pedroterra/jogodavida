@@ -7,15 +7,21 @@
 
   [X]	REQ02: O sistema deve permitir ao usuário desenhar os seres vivos da primeira geração da simulação
 
-  [ ]	melhorar sistema escolha seres vivos da primeira geração da simulação
+  [X]	melhorar sistema escolha seres vivos da primeira geração da simulação
 
   [ ]	REQ07: O sistema deverá permitir ao usuário simular passo-a-passo as gerações
 
   [ ]	aumentar seleção alguns padrões de imagens do seres vivos.
 
-  [ ]	REQ09: O sistema deverá permitir ao usuário salvar uma geração em arquivo
+  [X]	REQ09: O sistema deverá permitir ao usuário salvar uma geração em arquivo
 
   [ ]	REQ10: O sistema deverá permitir ao usuário carregar uma geração previamente armazenada em arquivo.
+
+  [ ] mudar modo de salvar arquivos (salvar somente seres vivos)
+  
+  [ ] fazer biblioteca do jogodavida
+
+  [ ] fazer interface grafica
 
 */
 #include<stdlib.h>
@@ -29,14 +35,15 @@ void imprime_mapa(int **matriz, int tamanho);
 int conta_vizinhos(int **matriz, int linha, int coluna);
 void copia_matriz(int **m_copia, int **m_original, int tamanho);
 void limpa_matriz(int **matriz, int tamanho);
-int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_gen[], int tipo_sim[], int vel_sim[]);
-void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[]);
+int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[]);
+void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[]);
 void selecionar_seres(int **mapa, int tamanho);
 void seleciona_num_gen(int *num_gen);
 void pressione_enter();
 void escolher_tamanho(int tam, int **mapa, int **mapa_next_gen);
 void desenha_ser(int **matriz, int tamanho);
 void salvar_geracao(int **matriz, int tamanho);
+void importa_geracao(int **matriz, int tamanho);
 
 int main(){
 	
@@ -49,9 +56,11 @@ int main(){
 	int num_gen[1];
 	int tipo_sim[1];
 	int vel_sim[1];
+	int geracao_global[1];
 	
 	int tam = 0;
 	
+	geracao_global[0] = 0;
 	num_gen[0]=1;
 	tipo_sim[0]=1;
 	vel_sim[0]=0;
@@ -59,10 +68,10 @@ int main(){
 	// Escolha do tamanho da matriz
 	
 	while (tam < 20 || tam > 100){
-		printf("\n-- Escolha o tamanho da matriz a ser criada: \n");
+		printf("\n-- Escolha o tamanho da matriz a ser criada: \n>> ");
 		scanf("%d", &tam);
 
-		if (tam < 10 || tam >100 ){
+		if (tam < 20 || tam >100 ){
 	    	    printf("\nTamanho inválido, repita o processo.");
 		}
 	}
@@ -88,10 +97,9 @@ int main(){
 	printf("\nMAPA\n");
 	imprime_mapa(mapa, tam);
 	
-	
 	//roda interface até que usuário marque para sair do programa
 	while(quit != 9){
-		quit = interface_comandos(mapa, tam, mapa_next_gen, num_gen, tipo_sim, vel_sim);
+		quit = interface_comandos(mapa, tam, mapa_next_gen, num_gen, tipo_sim, vel_sim, geracao_global);
 	}
 
 	return 0;
@@ -160,12 +168,13 @@ void limpa_matriz(int **matriz, int tamanho){
 	}	
 }
 
-void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[]){
+void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[]){
 	//roda a simulacao 
 	int vizinhos, i, j, k;
 	printf("Iniciando Simulacao\n");
 	
-	printf("\nGeracao 0\n");
+	printf("\nGeracao global: %d \n", geracao_global[0]);
+	printf("Geracao local: 0\n");
 	imprime_mapa(mapa, tamanho);
 	
         for (k=0;k<num_gen[0];k++){
@@ -192,26 +201,26 @@ void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[]
 			}
 		}
 		copia_matriz(mapa,  mapa_next_gen, tamanho);
-		
-		printf("\nGeracao %d \n", k+1);
+		geracao_global[0] = geracao_global[0] +1;
+		printf("\nGeração global: %d", geracao_global[0]);
+		printf("\nGeracao local: %d \n", k+1);
 		imprime_mapa(mapa, tamanho);
 	}
 }
 
-int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_gen[], int tipo_sim[], int vel_sim[]){
+int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[]){
 	int comando, subcomando;
 	printf("\n-- Selecione um COMANDO:\n");
-	//printf("0 - Refinir tamanho mapa\n");
-	printf("1 - Selecionar seres vivos\n");
-	printf("2 - limpar Mapa\n");
-	printf("3 - Determinar numero de geracoes a ser rodadas\n");
-	printf("4 - Escolha tipo de simulacao\n");
-	printf("5 - Rodar simulacao\n");
-	printf("6 - Salvar última geração\n");
-	printf("7 - Importar arquivo geração\n");
-	printf("8 - vizualizar configuracoes atuais\n");
-	printf("9 - Sair do jogo\n");
-	printf(">> ");
+	printf(" 1 - Selecionar seres vivos\n");
+	printf(" 2 - limpar Mapa\n");
+	printf(" 3 - Determinar numero de geracoes a ser rodadas\n");
+	printf(" 4 - Escolha tipo de simulacao\n");
+	printf(" 5 - Rodar simulacao\n");
+	printf(" 6 - Salvar última geração\n");
+	printf(" 7 - Importar arquivo geração\n");
+	printf(" 8 - vizualizar configuracoes atuais\n");
+	printf(" 9 - Sair do jogo\n");
+	printf(" >> ");
 	scanf("%d", &comando);
 
 	if (comando == 0){
@@ -250,7 +259,7 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 		}	
 	
 	} else if (comando ==5){
-		rodar_simulacao(matriz, mapa_next_gen, tamanho, num_gen, tipo_sim, vel_sim);
+		rodar_simulacao(matriz, mapa_next_gen, tamanho, num_gen, tipo_sim, vel_sim, geracao_global);
 	
 	} else if (comando == 6){
 		salvar_geracao(matriz, tamanho);
@@ -258,6 +267,8 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 	} else if (comando == 7){
 		//printf("7 - Importar Arquivo Geração\n");
 		printf("Funcao ainda não implementada\n");
+		
+		importa_geracao(matriz,tamanho);
 		
 	} else if (comando == 8){
 		printf("\nConfiguracao Atual\n");
@@ -288,23 +299,21 @@ void selecionar_seres(int **matriz, int tamanho){
 	int metade = tamanho/2;
 	int ser;
 	
-	printf("\t\t> Escolha o ser que quer adicionar ao mapa:\n\n ");
-	printf("\t\tSer 1:\n\n");
-	printf("\t\to o o o o o o o o o \n\n");
+	printf("\t\t-- Escolha o ser que quer adicionar ao mapa:\n\n ");
+	printf("\t\t\tSer 1:\n\n");
+	printf("\t\t   o o o o o o o o o o \n\n");
 	printf("\t\t------------------------\n\n");
-	printf("\t\tSer 2:\n\n");
-	printf("\t\t  o \n");
-	printf("\t\t    o \n");
-	printf("\t\to o o \n\n");
+	printf("\t\t\tSer 2:\n\n");
+	printf("\t\t\t  o \n");
+	printf("\t\t\t    o \n");
+	printf("\t\t\to o o \n\n");
 	printf("\t\t------------------------\n\n");
-	printf("\t\tSer 3:\n\n");
-	printf("\t\t  o \n");
-	printf("\t\to o o \n");
-	printf("\t\to   o \n");
-	printf("\t\t  o   \n\n");
+	printf("\t\t\tSer 3:\n\n");
+	printf("\t\t\t  o \n");
+	printf("\t\t\to o o \n");
+	printf("\t\t\to   o \n");
+	printf("\t\t\t  o   \n\n");
 	printf("\t\t------------------------\n\n>> ");
-	
-	//printf(" Ou digite 0 para não colocar nenhum ser no momento\n");
 	
 	scanf("%d", &ser);
 	
@@ -354,7 +363,6 @@ void desenha_ser(int **matriz, int tamanho){
 	printf("\n\t\t-- Escolha as coordenadas X e Y de cada ponto.\n");
 	printf("\t\t(Seu Mapa tem tamanho %d por %d. Logo digite valores de 0 a %d)\n", tamanho-2, tamanho-2, tamanho-3);
 	
-	
 	do{
 		while (linha < 0 || linha > tamanho-3 || coluna <0 || coluna > tamanho-3){
 			printf("\t\tEscolha o valor de X:\n\t\t>> ");
@@ -368,7 +376,6 @@ void desenha_ser(int **matriz, int tamanho){
 		}
 		
 		matriz[linha+1][coluna+1] = 1;
-	
 		imprime_mapa(matriz, tamanho);
 		
 		printf("\n-- Deseja adicinar outro ponto?\n");
@@ -379,23 +386,12 @@ void desenha_ser(int **matriz, int tamanho){
 		coluna= -1;
 		
 	} while (sair == 1);
-	
 }
 
 void salvar_geracao(int **matriz, int tamanho){
-	
-	
-	
-	char base_path[] = "/Users/pedrobirmann/Desktop/", extensao[] = ".txt";
-
-	//concatenates str1 and str2 and resultant string is stored in str1.
-	//strcat(str1,str2);
-	// puts(str1);
-	// puts(str2);	
-	
 	int i,j;
+	char base_path[] = "/Users/pedrobirmann/Desktop/", extensao[] = ".txt";
 	char filename[50];
-	
 	char finalpath[100] = "";
 		
 	printf("\tEscolha o nome do seu arquivo: \n\t>> ");
@@ -411,35 +407,100 @@ void salvar_geracao(int **matriz, int tamanho){
 		printf("\t Erro, não foi possível abrir o seu arquivo\n");
 		exit(1);
         } 
-	// else {
-	// 	printf("file opened");}
 	
+	// for (i = 0; i < tamanho; ++i){
+	//         for (j = 0; j < tamanho; ++j){
+	// 		if(matriz [i][j] == 0){
+	// 			fprintf(fp,"0");
+	// 		}else {
+	// 			fprintf(fp,"1");
+	// 		}
+			
 	for (i = 0; i < tamanho; ++i){
 	        for (j = 0; j < tamanho; ++j){
-			if(i == 0 || i == tamanho-1){
-				fprintf(fp,". ");
-			} else if( j == 0 ){
-				fprintf(fp,". ");
-			} else if (j == tamanho-1){
-				fprintf(fp,".");
-			} else if (matriz [i][j] == 1){
-				fprintf(fp,"o ");
-			} else{
-				fprintf(fp,"  ");
+			if(matriz [i][j] == 1){
+				fprintf(fp,"%d\n",i);
+				fprintf(fp,"%d\n\n",j);
 			}
+			
 		}
-		fprintf(fp,"\n");
+		//fprintf(fp,"\n");
+	
+	
+	
+	// for (i = 0; i < tamanho; ++i){
+// 	        for (j = 0; j < tamanho; ++j){
+// 			if(i == 0 || i == tamanho-1){
+// 				fprintf(fp,". ");
+// 			} else if( j == 0 ){
+// 				fprintf(fp,". ");
+// 			} else if (j == tamanho-1){
+// 				fprintf(fp,".");
+// 			} else if (matriz [i][j] == 1){
+// 				fprintf(fp,"o ");
+// 			} else{
+// 				fprintf(fp,"  ");
+// 			}
+// 		}
+// 		fprintf(fp,"\n");
 	}
-	
 	fclose(fp);
-	
 	printf("\n\tArquivo Salvo com o nome %s.txt  \n", filename);
-  
-	
 }
 	
 	
-  
+void importa_geracao(int **matriz, int tamanho){
+	int i,j;
+	char base_path[] = "/Users/pedrobirmann/Desktop/";
+	//char extensao[] = ".txt";
+	char filename[50];
+	char finalpath[100] = "";
+	
+	int aux;
+	int dado;
+	int lin, col, flag_lin =0, flag_col = 0;
+		
+	printf("\tEscreva o nome do seu arquivo: \n\t>> ");
+	scanf("%s",filename);
+	
+	strcat(finalpath,base_path);
+	strcat(finalpath,filename);
+	//strcat(finalpath,extensao);
+	
+    FILE *fp;
+
+    if((fp=fopen(finalpath, "rt"))==NULL) {
+		printf("\t Erro, não foi possível abrir o seu arquivo\n");
+		exit(1);
+        } 
+	
+			
+  	i = 0;
+  	while (!feof(fp)) {
+		// Lê uma linha (inclusive com o '\n')
+      	aux = fscanf(fp, "%d", &dado);
+		
+		if (flag_lin ==0){
+			lin = dado;
+			flag_lin = 1;
+		} else  {
+			col = dado;
+			flag_col = 1;
+		}
+		
+		if (flag_lin == 1 && flag_col == 1){
+			flag_lin = 0;
+			flag_col = 0;
+			matriz[lin][col] = 1;
+		}
+		
+  	}
+			
+	fclose(fp);
+	printf("\n\tArquivo importado\n");
+	
+	imprime_mapa(matriz, tamanho);
+} 
         
 
 
