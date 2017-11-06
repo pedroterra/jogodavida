@@ -1,23 +1,12 @@
 //jogo da vida
 
 /*
-  [ ] 	permitir ao usuário a redefinir tamanho do mundo
 
-  [ ]  colocar limites mínimo 50 e máximo 100
+  [ ] colocar limites mínimo 50 e máximo 100
 
-  [X]	REQ02: O sistema deve permitir ao usuário desenhar os seres vivos da primeira geração da simulação
+  [ ] REQ07: O sistema deverá permitir ao usuário simular passo-a-passo as gerações
 
-  [X]	melhorar sistema escolha seres vivos da primeira geração da simulação
-
-  [ ]	REQ07: O sistema deverá permitir ao usuário simular passo-a-passo as gerações
-
-  [ ]	aumentar seleção alguns padrões de imagens do seres vivos.
-
-  [X]	REQ09: O sistema deverá permitir ao usuário salvar uma geração em arquivo
-
-  [ ]	REQ10: O sistema deverá permitir ao usuário carregar uma geração previamente armazenada em arquivo.
-
-  [ ] mudar modo de salvar arquivos (salvar somente seres vivos)
+  [ ] aumentar seleção alguns padrões de imagens do seres vivos.
   
   [ ] fazer biblioteca do jogodavida
 
@@ -407,14 +396,6 @@ void salvar_geracao(int **matriz, int tamanho){
 		printf("\t Erro, não foi possível abrir o seu arquivo\n");
 		exit(1);
         } 
-	
-	// for (i = 0; i < tamanho; ++i){
-	//         for (j = 0; j < tamanho; ++j){
-	// 		if(matriz [i][j] == 0){
-	// 			fprintf(fp,"0");
-	// 		}else {
-	// 			fprintf(fp,"1");
-	// 		}
 			
 	for (i = 0; i < tamanho; ++i){
 	        for (j = 0; j < tamanho; ++j){
@@ -424,25 +405,7 @@ void salvar_geracao(int **matriz, int tamanho){
 			}
 			
 		}
-		//fprintf(fp,"\n");
-	
-	
-	
-	// for (i = 0; i < tamanho; ++i){
-// 	        for (j = 0; j < tamanho; ++j){
-// 			if(i == 0 || i == tamanho-1){
-// 				fprintf(fp,". ");
-// 			} else if( j == 0 ){
-// 				fprintf(fp,". ");
-// 			} else if (j == tamanho-1){
-// 				fprintf(fp,".");
-// 			} else if (matriz [i][j] == 1){
-// 				fprintf(fp,"o ");
-// 			} else{
-// 				fprintf(fp,"  ");
-// 			}
-// 		}
-// 		fprintf(fp,"\n");
+
 	}
 	fclose(fp);
 	printf("\n\tArquivo Salvo com o nome %s.txt  \n", filename);
