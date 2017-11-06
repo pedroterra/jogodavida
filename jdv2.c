@@ -17,6 +17,12 @@
 
   [ ]	REQ10: O sistema deverá permitir ao usuário carregar uma geração previamente armazenada em arquivo.
 
+  [ ] mudar modo de salvar arquivos (salvar somente seres vivos)
+  
+  [ ] fazer biblioteca do jogodavida
+
+  [ ] fazer interface grafica
+
 */
 #include<stdlib.h>
 #include<stdio.h>
@@ -37,6 +43,7 @@ void pressione_enter();
 void escolher_tamanho(int tam, int **mapa, int **mapa_next_gen);
 void desenha_ser(int **matriz, int tamanho);
 void salvar_geracao(int **matriz, int tamanho);
+void importa_geracao(int **matriz, int tamanho);
 
 int main(){
 	
@@ -261,6 +268,8 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 		//printf("7 - Importar Arquivo Geração\n");
 		printf("Funcao ainda não implementada\n");
 		
+		importa_geracao(matriz,tamanho);
+		
 	} else if (comando == 8){
 		printf("\nConfiguracao Atual\n");
 		printf("-Mapa atual:\n");
@@ -399,28 +408,99 @@ void salvar_geracao(int **matriz, int tamanho){
 		exit(1);
         } 
 	
+	// for (i = 0; i < tamanho; ++i){
+	//         for (j = 0; j < tamanho; ++j){
+	// 		if(matriz [i][j] == 0){
+	// 			fprintf(fp,"0");
+	// 		}else {
+	// 			fprintf(fp,"1");
+	// 		}
+			
 	for (i = 0; i < tamanho; ++i){
 	        for (j = 0; j < tamanho; ++j){
-			if(i == 0 || i == tamanho-1){
-				fprintf(fp,". ");
-			} else if( j == 0 ){
-				fprintf(fp,". ");
-			} else if (j == tamanho-1){
-				fprintf(fp,".");
-			} else if (matriz [i][j] == 1){
-				fprintf(fp,"o ");
-			} else{
-				fprintf(fp,"  ");
+			if(matriz [i][j] == 1){
+				fprintf(fp,"%d\n",i);
+				fprintf(fp,"%d\n\n",j);
 			}
+			
 		}
-		fprintf(fp,"\n");
+		//fprintf(fp,"\n");
+	
+	
+	
+	// for (i = 0; i < tamanho; ++i){
+// 	        for (j = 0; j < tamanho; ++j){
+// 			if(i == 0 || i == tamanho-1){
+// 				fprintf(fp,". ");
+// 			} else if( j == 0 ){
+// 				fprintf(fp,". ");
+// 			} else if (j == tamanho-1){
+// 				fprintf(fp,".");
+// 			} else if (matriz [i][j] == 1){
+// 				fprintf(fp,"o ");
+// 			} else{
+// 				fprintf(fp,"  ");
+// 			}
+// 		}
+// 		fprintf(fp,"\n");
 	}
 	fclose(fp);
 	printf("\n\tArquivo Salvo com o nome %s.txt  \n", filename);
 }
 	
 	
-  
+void importa_geracao(int **matriz, int tamanho){
+	int i,j;
+	char base_path[] = "/Users/pedrobirmann/Desktop/";
+	//char extensao[] = ".txt";
+	char filename[50];
+	char finalpath[100] = "";
+	
+	int aux;
+	int dado;
+	int lin, col, flag_lin =0, flag_col = 0;
+		
+	printf("\tEscreva o nome do seu arquivo: \n\t>> ");
+	scanf("%s",filename);
+	
+	strcat(finalpath,base_path);
+	strcat(finalpath,filename);
+	//strcat(finalpath,extensao);
+	
+    FILE *fp;
+
+    if((fp=fopen(finalpath, "rt"))==NULL) {
+		printf("\t Erro, não foi possível abrir o seu arquivo\n");
+		exit(1);
+        } 
+	
+			
+  	i = 0;
+  	while (!feof(fp)) {
+		// Lê uma linha (inclusive com o '\n')
+      	aux = fscanf(fp, "%d", &dado);
+		
+		if (flag_lin ==0){
+			lin = dado;
+			flag_lin = 1;
+		} else  {
+			col = dado;
+			flag_col = 1;
+		}
+		
+		if (flag_lin == 1 && flag_col == 1){
+			flag_lin = 0;
+			flag_col = 0;
+			matriz[lin][col] = 1;
+		}
+		
+  	}
+			
+	fclose(fp);
+	printf("\n\tArquivo importado\n");
+	
+	imprime_mapa(matriz, tamanho);
+} 
         
 
 
