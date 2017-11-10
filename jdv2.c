@@ -4,14 +4,19 @@
 
   [ ] colocar limites mínimo 50 e máximo 100
 
-  [ ] REQ07: O sistema deverá permitir ao usuário simular passo-a-passo as gerações
-
   [ ] aumentar seleção alguns padrões de imagens do seres vivos.
   
   [ ] fazer biblioteca do jogodavida
 
   [ ] fazer interface grafica
 
+  [ ] arrumar tamanho letras
+
+  [ ] setinhas
+`
+
+
+`
 */
 #include<stdlib.h>
 #include<stdio.h>
@@ -94,11 +99,13 @@ int main(){
 	return 0;
 }
 
-////////////
+//funcoes
+
 void imprime_mapa(int **matriz, int tamanho){
 	// função para imprimir matriz em seu estado atual.
 	
 	int i,j;
+	int seres = 0;
 	
 	for (i = 0; i < tamanho; ++i){
             for (j = 0; j < tamanho; ++j){
@@ -110,12 +117,15 @@ void imprime_mapa(int **matriz, int tamanho){
 		    	printf(".");
 		    } else if (matriz [i][j] == 1){
 			    printf("o ");
+				seres = seres + 1;
 		    } else{
 			    printf("  ");
 		    }
             }
             printf("\n");
         }
+	
+		printf("\n\nnumero de seres vivos: %d \n\n", seres);
 	
 }
 
