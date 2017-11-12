@@ -38,6 +38,10 @@ void importa_geracao(int **matriz, int tamanho);
 int contar_seres(int **matriz, int tamanho);
 void gerar_pontos_aleatorios(int **matriz, int tamanho);
 void auto_save(int **matriz, int colony_number[], int tamanho);
+void import_for_reproduction();
+void create_initial_colonies();
+void create_initial_colonies(int **matriz, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[], int colony_number[]);
+
 
 int colony_number[1];
 //colony_number[0]=0;
@@ -49,6 +53,9 @@ int main(){
 
   int **mapa;
   int **mapa_next_gen;
+  int **matriz_pai;
+  int **matriz_mae;
+  int **matriz_filha;
   int tam_mat;
   int num_gen[1];
   int tipo_sim[1];
@@ -88,9 +95,26 @@ int main(){
     mapa_next_gen [i] = (int *)malloc( tam * sizeof(int));
   }
 
+  matriz_pai  = (int **)malloc( tam * sizeof(int *));
+  for (i=0; i< tam ;i++){
+    matriz_pai [i] = (int *)malloc( tam * sizeof(int));
+  }
+
+  matriz_mae  = (int **)malloc( tam * sizeof(int *));
+  for (i=0; i< tam ;i++){
+    matriz_mae [i] = (int *)malloc( tam * sizeof(int));
+  }
+
+  matriz_filha  = (int **)malloc( tam * sizeof(int *));
+  for (i=0; i< tam ;i++){
+    matriz_filha [i] = (int *)malloc( tam * sizeof(int));
+  }
+
   // coloca zeros no mapa e no mapa next gen
   limpa_matriz(mapa, tam);
   copia_matriz(mapa_next_gen, mapa, tam);
+
+  create_initial_colonies(mapa, mapa_next_gen, tam, num_gen, tipo_sim,vel_sim,geracao_global,colony_number);
 
   //imprime mapa inicial
   //gerar_pontos_aleatorios(mapa, tam);
@@ -543,4 +567,41 @@ void auto_save(int **matriz, int colony_number[], int tamanho){
   fclose(fp);
   printf("\n\tArquivo Salvo com o nome colonia%s.txt  \n", filename);
   colony_number[0] = colony_number[0] + 1;
+}
+
+void import_for_reproduction(){};
+
+void reproduce(int **matriz_pai, int **matriz_mae, int **matriz_filha, int tamanho){
+  int i, j;
+  for (i=0; i< tamanho; i++){
+    for (j=0; j<tamanho; j++){
+      if (i < tamanho/2){
+        matriz_filha[i][j] = matriz_pai[i][j];
+      } else {
+        matriz_filha[i][j] = matriz_mae[i][j];
+      }
+    }
+  }
+  imprime_mapa(matriz_filha, tamanho);
+}
+
+void create_initial_colonies(int **matriz, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[], int colony_number[]){
+  int i,j, seres;
+  int colonies[100];
+  int top_10[10];
+  int survivors[100];
+
+
+
+  for(i=0; i<100; i++){
+    gerar_pontos_aleatorios(matriz,tamanho);
+    auto_save(matriz,colony_number,tamanho);
+    for (j=0; j<100; j++){
+      rodar_simulacao(matriz, mapa_next_gen, tamanho, num_gen, tipo_sim, vel_sim, geracao_global);
+    }
+    seres = contar_seres(matriz,tamanho);
+    survivors[i] = seres;
+  }
+  for (i=0; i<100; i++) printf(" %d -", survivors[i]);
+
 }
