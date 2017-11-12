@@ -13,10 +13,7 @@
 [ ] arrumar tamanho letras
 
 [ ] setinhas
-`
 
-
-`
 */
 #include<stdlib.h>
 #include<stdio.h>
@@ -40,6 +37,10 @@ void salvar_geracao(int **matriz, int tamanho);
 void importa_geracao(int **matriz, int tamanho);
 int contar_seres(int **matriz, int tamanho);
 void gerar_pontos_aleatorios(int **matriz, int tamanho);
+void auto_save(int **matriz, int colony_number[], int tamanho);
+
+int colony_number[1];
+//colony_number[0]=0;
 
 int main(){
 
@@ -53,6 +54,7 @@ int main(){
   int tipo_sim[1];
   int vel_sim[1];
   int geracao_global[1];
+  //int colony_number[1];
 
   int tam = 0;
 
@@ -60,6 +62,7 @@ int main(){
   num_gen[0]=1;
   tipo_sim[0]=1;
   vel_sim[0]=0;
+  colony_number[0]=0;
 
   // Escolha do tamanho da matriz
 
@@ -271,11 +274,9 @@ int interface_comandos(int **matriz, int tamanho, int **mapa_next_gen, int num_g
 
   } else if (comando == 6){
     salvar_geracao(matriz, tamanho);
+    //auto_save(matriz, colony_number,tamanho);
 
   } else if (comando == 7){
-    //printf("7 - Importar Arquivo Geração\n");
-    printf("Funcao ainda não implementada\n");
-
     importa_geracao(matriz,tamanho);
 
   } else if (comando == 8){
@@ -398,7 +399,7 @@ void desenha_ser(int **matriz, int tamanho){
 
 void salvar_geracao(int **matriz, int tamanho){
   int i,j;
-  char base_path[] = "/Users/pedrobirmann/Desktop/", extensao[] = ".txt";
+  char base_path[] = "/Users/pedrobirmann/Desktop/jdv/", extensao[] = ".txt";
   char filename[50];
   char finalpath[100] = "";
 
@@ -422,9 +423,7 @@ void salvar_geracao(int **matriz, int tamanho){
         fprintf(fp,"%d\n",i);
         fprintf(fp,"%d\n\n",j);
       }
-
     }
-
   }
   fclose(fp);
   printf("\n\tArquivo Salvo com o nome %s.txt  \n", filename);
@@ -433,7 +432,7 @@ void salvar_geracao(int **matriz, int tamanho){
 
 void importa_geracao(int **matriz, int tamanho){
   int i,j;
-  char base_path[] = "/Users/pedrobirmann/Desktop/";
+  char base_path[] = "/Users/pedrobirmann/Desktop/jdv/";
   char filename[50];
   char finalpath[100] = "";
 
@@ -473,9 +472,7 @@ void importa_geracao(int **matriz, int tamanho){
       if (lin < tamanho - 1 || col < tamanho - 1){
         matriz[lin][col] = 1;
       }
-
     }
-
   }
 
   fclose(fp);
@@ -512,4 +509,38 @@ void gerar_pontos_aleatorios(int **matriz, int tamanho){
   }
   imprime_mapa(matriz, tamanho);
 
+}
+
+void auto_save(int **matriz, int colony_number[], int tamanho){
+  int i,j;
+  char base_path[] = "/Users/pedrobirmann/Desktop/jdv/", extensao[] = ".txt";
+  //char filename[50];
+  char finalpath[100] = "";
+  char filename[3];
+
+  sprintf(filename, "%d", colony_number[0]);
+
+  strcat(finalpath,base_path);
+  strcat(finalpath,"colonia");
+  strcat(finalpath,filename);
+  strcat(finalpath,extensao);
+
+  FILE *fp;
+
+  if((fp=fopen(finalpath, "w"))==NULL) {
+    printf("\t Erro, não foi possível abrir o seu arquivo\n");
+    exit(1);
+  }
+
+  for (i = 0; i < tamanho; ++i){
+    for (j = 0; j < tamanho; ++j){
+      if(matriz [i][j] == 1){
+        fprintf(fp,"%d\n",i);
+        fprintf(fp,"%d\n\n",j);
+      }
+    }
+  }
+  fclose(fp);
+  printf("\n\tArquivo Salvo com o nome colonia%s.txt  \n", filename);
+  colony_number[0] = colony_number[0] + 1;
 }
