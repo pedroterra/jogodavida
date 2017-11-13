@@ -41,9 +41,11 @@ void auto_save(int **matriz, int colony_number[], int tamanho);
 void import_for_reproduction();
 void create_initial_colonies();
 void create_initial_colonies(int **matriz, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[], int colony_number[]);
+void get_top_ten();
 
 
 int colony_number[1];
+int survivors[100];
 //colony_number[0]=0;
 
 int main(){
@@ -587,11 +589,8 @@ void reproduce(int **matriz_pai, int **matriz_mae, int **matriz_filha, int taman
 
 void create_initial_colonies(int **matriz, int **mapa_next_gen, int tamanho, int num_gen[], int tipo_sim[], int vel_sim[], int geracao_global[], int colony_number[]){
   int i,j, seres;
-  int colonies[100];
-  int top_10[10];
-  int survivors[100];
-
-
+  //int colonies[100];
+  //int survivors[100];
 
   for(i=0; i<100; i++){
     gerar_pontos_aleatorios(matriz,tamanho);
@@ -602,6 +601,41 @@ void create_initial_colonies(int **matriz, int **mapa_next_gen, int tamanho, int
     seres = contar_seres(matriz,tamanho);
     survivors[i] = seres;
   }
-  for (i=0; i<100; i++) printf(" %d -", survivors[i]);
+  //for (i=0; i<100; i++) printf(" %d,", survivors[i]);
+
+  get_top_ten();
+
+}
+
+void get_top_ten(){
+  int i, j,k,l, count = 0;
+
+  int max, idx;
+  int temp_vec[100];
+  int top_10[10];
+
+  for (k=0; k<100; k++){
+    temp_vec[k] = survivors[k];
+    //printf(" %d-", temp_vec[k]);
+  }
+
+while(count < 10){
+  max = temp_vec[0];
+  for (i=0; i<100 ;i++){
+    if (temp_vec[i] > max){
+      max = temp_vec[i];
+      idx = i;
+    }
+  }
+  //printf("max : %d, idx: %d", max, idx);
+  top_10[count] = idx;
+  temp_vec[idx] = 0;
+  count = count + 1;
+}
+
+for (j=0;j<10;j++){
+  printf("\n %d", top_10[j]);
+}
+
 
 }
