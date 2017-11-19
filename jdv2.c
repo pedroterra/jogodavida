@@ -619,23 +619,23 @@ void get_top_ten(){
     //printf(" %d-", temp_vec[k]);
   }
 
-while(count < 10){
-  max = temp_vec[0];
-  for (i=0; i<100 ;i++){
-    if (temp_vec[i] > max){
-      max = temp_vec[i];
-      idx = i;
+  while(count < 10){
+    max = temp_vec[0];
+    for (i=0; i<100 ;i++){
+      if (temp_vec[i] > max){
+        max = temp_vec[i];
+        idx = i;
+      }
     }
+    //printf("max : %d, idx: %d", max, idx);
+    top_10[count] = idx;
+    temp_vec[idx] = 0;
+    count = count + 1;
   }
-  //printf("max : %d, idx: %d", max, idx);
-  top_10[count] = idx;
-  temp_vec[idx] = 0;
-  count = count + 1;
-}
 
-for (j=0;j<10;j++){
-  printf("\n %d", top_10[j]);
-}
+  for (j=0;j<10;j++){
+    printf("\n %d", top_10[j]);
+  }
 
 
 }
