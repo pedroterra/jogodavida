@@ -120,7 +120,7 @@ int main(){
   printf("Start ten\n");
   get_top_ten(top_10);
 
-  for (n = 0; n<10; n++){
+  for (n = 0; n<3; n++){
     create_next_batch(mapa,mapa_next_gen, matriz_pai, matriz_mae, matriz_filha, tam, num_gen, tipo_sim, vel_sim, geracao_global);
     printf("Start ten\n");
     get_top_ten(top_10);
@@ -234,7 +234,7 @@ void rodar_simulacao(int **mapa, int **mapa_next_gen, int tamanho, int num_gen[]
     }
     copia_matriz(mapa,  mapa_next_gen, tamanho);
     geracao_global[0] = geracao_global[0] +1;
-    printf("\nGeração global: %d", geracao_global[0]);
+    printf("\nGeração global: %d \n", geracao_global[0]);
     //printf("\nGeracao local: %d \n", k+1);
     imprime_mapa(mapa, tamanho);
   }
@@ -629,8 +629,6 @@ void import_for_reproduction(int colony_one, int colony_two, int **matriz_pai, i
   } else{
     strcat(finalpath_pai,base_path2);
   }
-
-  //strcat(finalpath_pai,base_path);
 
   strcat(finalpath_pai,filename_pai);
   strcat(finalpath_pai,".txt");
